@@ -133,6 +133,14 @@ impl TcpListener {
             SocketAddr::V6(..) => TcpSocket::new_v6()?,
         };
 
+        if accept_opts.tcp.send_buffer_size > Some(0) {
+            socket.set_send_buffer_size(accept_opts.tcp.send_buffer_size.unwrap())?;
+        }
+
+        if accept_opts.tcp.recv_buffer_size > Some(0) {
+            socket.set_recv_buffer_size(accept_opts.tcp.recv_buffer_size.unwrap())?;
+        }
+
         // On platforms with Berkeley-derived sockets, this allows to quickly
         // rebind a socket, without needing to wait for the OS to clean up the
         // previous one.
